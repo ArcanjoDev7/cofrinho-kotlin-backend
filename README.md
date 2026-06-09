@@ -18,6 +18,15 @@ Backend simples em Kotlin para guardar dinheiro em um cofrinho virtual.
 - Java 17
 - Gradle
 
+## Arquitetura
+
+O projeto segue uma Clean Architecture simples:
+
+- `domain`: entidades, value objects, contratos e regras puras.
+- `application`: casos de uso e excecoes de aplicacao.
+- `infra`: implementacoes tecnicas, como repositorio em memoria.
+- `delivery`: entrada HTTP com Ktor, DTOs e mapeamentos.
+
 ## Como rodar
 
 Com Java 17 e Gradle instalados, execute:

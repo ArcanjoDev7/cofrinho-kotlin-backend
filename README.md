@@ -16,19 +16,14 @@ Backend simples em Kotlin para guardar dinheiro em um cofrinho virtual.
 - Ktor 3
 - Kotlinx Serialization
 - Java 17
+- Gradle
 
 ## Como rodar
 
-No Windows, execute:
+Com Java 17 e Gradle instalados, execute:
 
 ```bash
-.\gradlew.bat run
-```
-
-Em Linux/macOS, execute:
-
-```bash
-./gradlew run
+gradle run
 ```
 
 A API sobe em:
@@ -76,6 +71,6 @@ curl -X DELETE http://localhost:8080/api/movimentacoes/ID_DA_MOVIMENTACAO
 ## Proximos passos sugeridos
 
 - Persistir os dados em PostgreSQL ou H2.
-- Criar usuarios e autenticação.
+- Criar usuarios e autenticacao.
 - Criar metas de economia.
 - Adicionar Docker.

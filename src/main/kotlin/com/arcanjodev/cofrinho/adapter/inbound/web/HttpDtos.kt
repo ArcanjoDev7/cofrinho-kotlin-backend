@@ -1,4 +1,4 @@
-package com.arcanjodev.cofrinho.delivery.http
+package com.arcanjodev.cofrinho.adapter.inbound.web
 
 import com.arcanjodev.cofrinho.application.usecase.RegisterMovementCommand
 import com.arcanjodev.cofrinho.domain.model.Movement
@@ -81,3 +81,4 @@ enum class MovementTypeResponse {
 data class ErrorResponse(
     val message: String
 )
+

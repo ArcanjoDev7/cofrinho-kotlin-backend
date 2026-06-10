@@ -1,6 +1,6 @@
 package com.arcanjodev.cofrinho.infra
 
-import com.arcanjodev.cofrinho.infra.repository.InMemoryMovementRepository
+import com.arcanjodev.cofrinho.adapter.out.persistence.InMemoryMovementRepository
 import com.arcanjodev.cofrinho.domain.model.Movement
 import com.arcanjodev.cofrinho.domain.model.MovementType
 import java.math.BigDecimal

@@ -2,7 +2,7 @@ package com.arcanjodev.cofrinho.application.usecase
 
 import com.arcanjodev.cofrinho.application.exception.MovementNotFoundException
 import com.arcanjodev.cofrinho.domain.model.MovementId
-import com.arcanjodev.cofrinho.domain.repository.MovementRepository
+import com.arcanjodev.cofrinho.application.port.out.MovementRepository
 
 class DeleteMovementUseCase(
     private val movementRepository: MovementRepository

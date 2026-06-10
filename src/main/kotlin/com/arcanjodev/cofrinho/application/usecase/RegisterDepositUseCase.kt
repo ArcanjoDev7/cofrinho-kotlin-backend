@@ -2,7 +2,7 @@ package com.arcanjodev.cofrinho.application.usecase
 
 import com.arcanjodev.cofrinho.domain.model.Movement
 import com.arcanjodev.cofrinho.domain.model.MovementType
-import com.arcanjodev.cofrinho.domain.repository.MovementRepository
+import com.arcanjodev.cofrinho.application.port.out.MovementRepository
 import java.math.BigDecimal
 
 class RegisterDepositUseCase(

@@ -5,7 +5,7 @@ import com.arcanjodev.cofrinho.application.usecase.GetPiggyBankSummaryUseCase
 import com.arcanjodev.cofrinho.application.usecase.RegisterDepositUseCase
 import com.arcanjodev.cofrinho.application.usecase.RegisterMovementCommand
 import com.arcanjodev.cofrinho.application.usecase.RegisterWithdrawUseCase
-import com.arcanjodev.cofrinho.infra.repository.InMemoryMovementRepository
+import com.arcanjodev.cofrinho.adapter.out.persistence.InMemoryMovementRepository
 import java.math.BigDecimal
 import kotlin.test.Test
 import kotlin.test.assertEquals

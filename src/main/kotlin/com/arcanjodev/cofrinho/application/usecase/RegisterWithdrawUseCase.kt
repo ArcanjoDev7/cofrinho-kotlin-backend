@@ -4,7 +4,7 @@ import com.arcanjodev.cofrinho.application.exception.InsufficientBalanceExceptio
 import com.arcanjodev.cofrinho.domain.model.Movement
 import com.arcanjodev.cofrinho.domain.model.MovementId
 import com.arcanjodev.cofrinho.domain.model.MovementType
-import com.arcanjodev.cofrinho.domain.repository.MovementRepository
+import com.arcanjodev.cofrinho.application.port.out.MovementRepository
 import com.arcanjodev.cofrinho.domain.service.PiggyBankCalculator
 
 class RegisterWithdrawUseCase(

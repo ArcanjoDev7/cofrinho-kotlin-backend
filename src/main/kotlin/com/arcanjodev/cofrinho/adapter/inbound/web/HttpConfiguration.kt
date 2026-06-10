@@ -1,4 +1,4 @@
-package com.arcanjodev.cofrinho.delivery.http
+package com.arcanjodev.cofrinho.adapter.inbound.web
 
 import com.arcanjodev.cofrinho.application.exception.InsufficientBalanceException
 import com.arcanjodev.cofrinho.application.exception.MovementNotFoundException
@@ -16,8 +16,9 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.json.Json
 import org.slf4j.LoggerFactory
+import com.arcanjodev.cofrinho.adapter.inbound.web.PiggyBankController
 
-private val logger = LoggerFactory.getLogger("com.arcanjodev.cofrinho.delivery.http.HttpConfiguration")
+private val logger = LoggerFactory.getLogger("com.arcanjodev.cofrinho.adapter.inbound.web.HttpConfiguration")
 fun Application.configureHttp(
     getSummary: GetPiggyBankSummaryUseCase,
     registerDeposit: RegisterDepositUseCase,
@@ -54,6 +55,9 @@ fun Application.configureHttp(
         }
     }
 
+    // create controller to comply with delivery adapter responsibilities (hexagonal)
+    val controller = PiggyBankController(getSummary, registerDeposit, registerWithdraw, deleteMovement)
+
     routing {
         get("/health") {
             call.respond(mapOf("status" to "ok"))
@@ -61,41 +65,28 @@ fun Application.configureHttp(
 
         route("/api") {
             get("/cofrinho") {
-                val method = call.request.local.method
-                val uri = call.request.uri
-                val summary = getSummary.execute()
-                call.respond(PiggyBankSummaryResponse.from(summary))
-                logger.info("{} {} - completed successfully, status={}", method, uri, HttpStatusCode.OK.value)
+                val response = controller.getSummary()
+                call.respond(response)
             }
 
             post("/depositos") {
-                val method = call.request.local.method
-                val uri = call.request.uri
                 val request = call.receive<MoneyRequest>()
-                logger.debug("{} {} - payload: {}", method, uri, request)
-                val movement = registerDeposit.execute(request.toCommand())
-                call.respond(HttpStatusCode.Created, MovementResponse.from(movement))
-                // MovementId is a value class; log the raw UUID string (movement.id.value)
-                logger.info("{} {} - completed successfully, status={}, id={}", method, uri, HttpStatusCode.Created.value, movement.id.value)
+                val response = controller.registerDeposit(request)
+                call.respond(HttpStatusCode.Created, response)
             }
 
             post("/saques") {
-                val method = call.request.local.method
-                val uri = call.request.uri
                 val request = call.receive<WithdrawRequest>()
-                logger.debug("{} {} - payload: {}", method, uri, request)
-                val movement = registerWithdraw.execute(request.toCommand())
-                call.respond(HttpStatusCode.Created, MovementResponse.from(movement))
-                // Log only the UUID string (not the data class description)
-                logger.info("{} {} - completed successfully, status={}, id={}", method, uri, HttpStatusCode.Created.value, movement.id.value)
+                val response = controller.registerWithdraw(request)
+                call.respond(HttpStatusCode.Created, response)
             }
 
             delete("/movimentacoes/{id}") {
                 val id = call.parameters["id"].orEmpty()
-                deleteMovement.execute(id)
+                controller.deleteMovement(id)
                 call.respond(HttpStatusCode.NoContent)
-                logger.info("DELETE /api/movimentacoes/{} - completed successfully", id)
             }
         }
     }
 }
+

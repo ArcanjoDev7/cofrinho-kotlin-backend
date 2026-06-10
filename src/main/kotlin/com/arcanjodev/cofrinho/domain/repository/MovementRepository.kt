@@ -5,6 +5,7 @@ import com.arcanjodev.cofrinho.domain.model.MovementId
 
 interface MovementRepository {
     fun findAll(): List<Movement>
+    fun findById(id: MovementId): Movement?
     fun save(movement: Movement): Movement
     fun deleteById(id: MovementId): Boolean
 }

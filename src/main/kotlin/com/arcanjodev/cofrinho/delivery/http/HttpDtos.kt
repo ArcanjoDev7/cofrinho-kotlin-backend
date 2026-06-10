@@ -19,6 +19,18 @@ data class MoneyRequest(
 }
 
 @Serializable
+data class WithdrawRequest(
+    val id: String,
+    val description: String = "",
+    val valor: Double
+) {
+    fun toCommand(): RegisterMovementCommand = RegisterMovementCommand(
+        description = if (description.isBlank()) id else description,
+        amount = BigDecimal.valueOf(valor)
+    )
+}
+
+@Serializable
 data class PiggyBankSummaryResponse(
     val balance: Double,
     val totalSaved: Double,

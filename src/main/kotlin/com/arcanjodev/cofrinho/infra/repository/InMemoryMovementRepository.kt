@@ -10,6 +10,8 @@ class InMemoryMovementRepository : MovementRepository {
 
     override fun findAll(): List<Movement> = movements.values.toList()
 
+    override fun findById(id: MovementId): Movement? = movements[id.value]
+
     override fun save(movement: Movement): Movement {
         movements[movement.id.value] = movement
         return movement

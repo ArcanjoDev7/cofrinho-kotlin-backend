@@ -1,34 +1,9 @@
 package com.arcanjodev.cofrinho.adapter.inbound.web
 
-import com.arcanjodev.cofrinho.application.usecase.RegisterMovementCommand
 import com.arcanjodev.cofrinho.domain.model.Movement
 import com.arcanjodev.cofrinho.domain.model.MovementType
 import com.arcanjodev.cofrinho.domain.model.PiggyBankSummary
 import kotlinx.serialization.Serializable
-import java.math.BigDecimal
-
-@Serializable
-data class MoneyRequest(
-    val descricao: String,
-    val valor: Double
-) {
-    fun toCommand(): RegisterMovementCommand = RegisterMovementCommand(
-        description = descricao,
-        amount = BigDecimal.valueOf(valor)
-    )
-}
-
-@Serializable
-data class WithdrawRequest(
-    val id: String,
-    val description: String = "",
-    val valor: Double
-) {
-    fun toCommand(): RegisterMovementCommand = RegisterMovementCommand(
-        description = if (description.isBlank()) id else description,
-        amount = BigDecimal.valueOf(valor)
-    )
-}
 
 @Serializable
 data class PiggyBankSummaryResponse(

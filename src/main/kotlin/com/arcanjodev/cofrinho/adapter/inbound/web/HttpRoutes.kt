@@ -16,9 +16,10 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.json.Json
 import org.slf4j.LoggerFactory
-import com.arcanjodev.cofrinho.adapter.inbound.web.PiggyBankController
+import com.arcanjodev.cofrinho.adapter.inbound.web.PiggyBankRestHandler
 
-private val logger = LoggerFactory.getLogger("com.arcanjodev.cofrinho.adapter.inbound.web.HttpConfiguration")
+private val logger = LoggerFactory.getLogger("com.arcanjodev.cofrinho.adapter.inbound.web.HttpRoutes")
+
 fun Application.configureHttp(
     getSummary: GetPiggyBankSummaryUseCase,
     registerDeposit: RegisterDepositUseCase,
@@ -48,15 +49,13 @@ fun Application.configureHttp(
             logger.info("Movimentacao nao encontrada: {}", cause.message, cause)
             call.respond(HttpStatusCode.NotFound, ErrorResponse(cause.message ?: "Nao encontrado"))
         }
-        // Log unexpected errors so we can inspect stacktraces in the logs
         exception<Throwable> { call, cause ->
             logger.error("Unhandled exception while processing request {} {}", call.request.local.method, call.request.uri, cause)
             call.respond(HttpStatusCode.InternalServerError, ErrorResponse("Erro interno"))
         }
     }
 
-    // create controller to comply with delivery adapter responsibilities (hexagonal)
-    val controller = PiggyBankController(getSummary, registerDeposit, registerWithdraw, deleteMovement)
+    val handler = PiggyBankRestHandler(getSummary, registerDeposit, registerWithdraw, deleteMovement)
 
     routing {
         get("/health") {
@@ -65,25 +64,25 @@ fun Application.configureHttp(
 
         route("/api") {
             get("/cofrinho") {
-                val response = controller.getSummary()
+                val response = handler.getSummary()
                 call.respond(response)
             }
 
             post("/depositos") {
-                val request = call.receive<MoneyRequest>()
-                val response = controller.registerDeposit(request)
+                val request = call.receive<DepositRequest>()
+                val response = handler.registerDeposit(request)
                 call.respond(HttpStatusCode.Created, response)
             }
 
             post("/saques") {
                 val request = call.receive<WithdrawRequest>()
-                val response = controller.registerWithdraw(request)
+                val response = handler.registerWithdraw(request)
                 call.respond(HttpStatusCode.Created, response)
             }
 
             delete("/movimentacoes/{id}") {
                 val id = call.parameters["id"].orEmpty()
-                controller.deleteMovement(id)
+                handler.deleteMovement(id)
                 call.respond(HttpStatusCode.NoContent)
             }
         }
